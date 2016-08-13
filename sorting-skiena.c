@@ -3,6 +3,8 @@
 
 /************
 MERGESORT
+Best, Average and Worst: O(nlog(n))
+*Requires O(n) additional memory
 ************/
 
 mergesort(item_type s[], int low, int high) {
@@ -35,6 +37,8 @@ merge (item_type s[], int low, int middle, int high) {
 
 /************
 QUICKSORT
+Best and Average: O(nlog(n))
+Worst: O(n^2)
 ************/
 
 quicksort(item_type s[], int l, int h) {
