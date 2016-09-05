@@ -52,3 +52,15 @@ insert_edge(graph* g, int x, int y, bool directed) {
     if (directed == FALSE) insert_edge(g, y, x, TRUE);
     else g->nedges++;
 }
+
+/*******************
+BREADTH-FIRST SEARCH (Queue, FIFO)
+Directed: O(n+m)
+Undirected: O(n+m)
+*******************/
+
+/*******************
+DEPTH-FIRST SEARCH (Recursive, 'Stack', LIFO)
+Directed: O(n+m)
+Undirected: O(n+m)
+*******************/
