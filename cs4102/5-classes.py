@@ -13,6 +13,8 @@ index_dict = {}
 student_reg = []
 course_list = []
 n = 0
+s = 0
+t = 0
 
 def get_file_data():
     global n
@@ -38,7 +40,7 @@ def get_file_data():
     for i in range(0, c):
         entry = line.rstrip().split(" ")
         course = entry[0] + " " + entry[1]
-        course_list.append([course, entry[2]])
+        course_list.append([ course, int(entry[2]) ])
         line = f.readline()
 
 def construct_graph():
@@ -49,11 +51,12 @@ def construct_graph():
             graph[entry[0]] = [entry[1]]
 
 def construct_adj_matrix(students, courses):
-    global graph, student_reg, course_list, index_dict, n
+    global graph, student_reg, course_list, index_dict, n, t
 
     # Initializing matrix, include two nodes for source + sink
     num_nodes = len(courses) + len(students) + 2
     matrix = [[0 for i in range(num_nodes)] for j in range(num_nodes)]
+    t = num_nodes - 1
 
     # Make it easier to assign values in the matrix using dict
     index = 1
@@ -72,9 +75,49 @@ def construct_adj_matrix(students, courses):
     for course in course_list:
         matrix[index_dict[course[0]]][num_nodes - 1] = course[1]
 
-    pprint(matrix)
+    return matrix
 
-    return
+def do_dfs(s, t):
+    for i in range(t+1):
+        if matrix[0][i]:
+            return True
+    return False
+
+def dfs(s, t):
+    global matrix
+    visited = [False for i in range(t + 1)]
+ 
+    stack = []
+    path = []
+
+    visited[s] = True
+
+    stack.append(s)
+
+    if (s==t):
+        return minn
+
+    min_val = sys.maxint
+
+    while(stack != []):
+        row = stack.pop()
+        path.append(row)
+
+        # Process
+        if row == t:
+            for i in range(len(path)-1):
+                min_val = min(min_val, matrix[path[i]][path[i+1]])
+            for i in range(len(path)-1):
+                matrix[path[i]][path[i+1]] -= min_val
+                matrix[path[i+1]][path[i]] += min_val
+            return True
+        
+        # Add neighbors
+        for i in range(0, t + 1):
+            if matrix[row][i] != 0 and visited[i] == False:
+                stack.append(i)                 
+    return False
+
 
 get_file_data()
 construct_graph()
@@ -86,6 +129,34 @@ for course in course_list:
     courses.append(course[0])
 
 matrix = construct_adj_matrix(students, courses)
+
+# Test-case for students that register for too few classes
+for student in students:
+    count = 0
+    for reg in student_reg:
+        if reg[0] == student:
+            count += 1
+    if count < n:
+        print "No"
+        sys.exit()
+
+while(do_dfs(s, t)):
+    try:
+        if not dfs(s, t):
+            sys.exit()
+    except:
+        print "No"
+        sys.exit()
+
+max_flow = 0
+
+for i in range(t + 1):
+    max_flow += matrix[i][0]
+
+if len(students)*n == max_flow:
+    print "Yes"
+else:
+    print "No"
 
 # Anything popped off the stack should be put onto a closed list
 # Once 't' has been popped from the stack, we can trace-back
