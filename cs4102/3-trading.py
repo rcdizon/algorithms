@@ -13,7 +13,6 @@ arr = []
 def get_file_data():
     line = data
     while line:
-        # print line
         points_list.append(line.rstrip())
         line = f.readline()
     for x in range(1, int(points_list[0])+1):
@@ -31,7 +30,7 @@ def calc_dist(index1, index2, arr):
 def brute_force(size, arr):
     min = calc_dist(0,1, arr)
     for i in range(0, size-1):
-        for j in range(1, size):
+        for j in range(i, size):
             if i==j:
                 continue
             if (calc_dist(i, j, arr) < min):
@@ -73,7 +72,10 @@ def horiz_sort(old_list):
     return old_list
 
 #### MAIN SCRIPT STARTS HERE ####
-if data == "0":
+if data == "0" or data == "" or data == None:
+    sys.exit()
+elif data == "1":
+    print "0"
     sys.exit()
 
 get_file_data()
@@ -85,10 +87,19 @@ mid = 0
 mid = size // 2
 left_half = arr[:mid]
 right_half = arr[mid:]
+left_short = 0.0
+right_short = 0.0
+min_dist = 0.0
 
-left_short = brute_force(len(left_half), left_half)
-right_short = brute_force(len(right_half), right_half)
-min_dist = min(left_short,right_short)
+if len(left_half) > 1 and len(right_half) > 1:
+    left_short = brute_force(len(left_half), left_half)
+    right_short = brute_force(len(right_half), right_half)
+    min_dist = min(left_short,right_short)
+elif len(arr) == 3:
+    min_dist = min(min(calc_dist(0, 1, arr), calc_dist(1, 2, arr)), calc_dist(1, 2, arr))
+else:
+    min_dist = calc_dist(0, 1, arr)
+    
 
 mid_point = arr[size // 2]
 
